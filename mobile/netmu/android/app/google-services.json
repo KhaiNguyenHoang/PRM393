@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "215523245576",
+    "project_id": "respiraams-32d7d",
+    "storage_bucket": "respiraams-32d7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215523245576:android:186050fdb73e847e839bbd",
+        "android_client_info": {
+          "package_name": "com.example.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEEVWznn0Ty068Flz2ND_q7CLt4jKg55c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215523245576:android:b44c40a0e17ee42f839bbd",
+        "android_client_info": {
+          "package_name": "com.example.netmu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEEVWznn0Ty068Flz2ND_q7CLt4jKg55c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
