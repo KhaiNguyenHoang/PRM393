@@ -1,0 +1,88 @@
+{
+    "@_last_modified": "2026-05-30T00:00:00",
+
+    "language": "Việt Nam",
+    "@language": {
+        "description": "The current language"
+    },
+
+    "settingSectionHeader": "NGÔN NGỮ",
+    "@settingSectionHeader": {
+        "description": "Section header for language settings"
+    },
+
+    "appTitle": "Netmu",
+    "welcomeTitle": "Chào mừng đến với Netmu",
+
+    "loginTitle": "Đăng nhập",
+    "loginSubtitle": "Chào mừng trở lại.",
+    "loginButton": "Đăng nhập",
+    "loginFooter": "Chưa có tài khoản?",
+    "loginFooterAction": "Tạo tài khoản",
+
+    "registerTitle": "Tạo tài khoản",
+    "registerSubtitle": "Đăng ký để bắt đầu ngay hôm nay.",
+    "registerButton": "Tạo tài khoản",
+    "registerFooter": "Đã có tài khoản?",
+    "registerFooterAction": "Đăng nhập",
+
+    "usernameLabel": "Tên đăng nhập",
+    "emailLabel": "Email",
+    "passwordLabel": "Mật khẩu",
+    "oldPasswordLabel": "Mật khẩu cũ",
+    "newPasswordLabel": "Mật khẩu mới",
+    "confirmPasswordLabel": "Xác nhận mật khẩu",
+
+    "usernameHint": "VD: JohnDoe",
+    "emailHint": "abc@gmail.com",
+
+    "requiredUsername": "Vui lòng nhập tên đăng nhập",
+    "minUsername": "Tối thiểu 3 ký tự",
+    "requiredEmail": "Vui lòng nhập email",
+    "invalidEmail": "Vui lòng nhập email hợp lệ",
+    "requiredPassword": "Vui lòng nhập mật khẩu",
+    "minPassword": "Mật khẩu tối thiểu 8 ký tự",
+    "confirmPasswordMismatch": "Mật khẩu xác nhận phải khớp",
+    "requiredOldPassword": "Vui lòng nhập mật khẩu cũ",
+
+    "navProfile": "Hồ sơ",
+    "navHome": "Trang chủ",
+    "navSettings": "Cài đặt",
+
+    "synopsis": "Tóm tắt",
+    "readMore": "Đọc thêm",
+    "showLess": "Thu gọn",
+    "details": "Chi tiết",
+    "infoDirector": "Đạo diễn",
+    "infoDuration": "Thời lượng",
+    "infoGenres": "Thể loại",
+    "watchNow": "Xem ngay",
+
+    "directedBy": "Đạo diễn: {director}",
+    "@directedBy": {
+        "placeholders": {
+            "director": {
+                "type": "String"
+            }
+        }
+    },
+
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "changePassword": "Đổi mật khẩu",
+    "changePasswordButton": "Đổi mật khẩu",
+    "logOut": "Đăng xuất",
+    "sectionAccount": "Tài khoản",
+    "sectionSettings": "Cài đặt",
+    "retry": "Thử lại",
+    "updateProfileButton": "Cập nhật hồ sơ",
+    "unexpectedError": "Có lỗi xảy ra",
+
+    "notificationsTitle": "Thông báo",
+    "emptyNotifications": "Chưa có thông báo nào",
+    "emptyNotificationsSub": "Bạn đã xem hết. Hãy quay lại sau.",
+    "failedLoadNotifications": "Không thể tải thông báo",
+
+    "videoPlayerTitle": "Trình phát video",
+    "popularSectionHeader": "Đang nổi",
+    "discoverSectionHeader": "Khám phá"
+}
