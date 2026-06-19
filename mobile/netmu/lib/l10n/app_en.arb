@@ -1,0 +1,88 @@
+{
+    "@_last_modified": "2026-05-30T00:00:00",
+
+    "language": "English",
+    "@language": {
+        "description": "The current language"
+    },
+
+    "settingSectionHeader": "LANGUAGE",
+    "@settingSectionHeader": {
+        "description": "Section header for language settings"
+    },
+
+    "appTitle": "Netmu",
+    "welcomeTitle": "Welcome to Netmu",
+
+    "loginTitle": "Login",
+    "loginSubtitle": "Welcome back.",
+    "loginButton": "Login",
+    "loginFooter": "Do not have an account?",
+    "loginFooterAction": "Create account",
+
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Sign up to get started today.",
+    "registerButton": "Create account",
+    "registerFooter": "Already have an account?",
+    "registerFooterAction": "Login",
+
+    "usernameLabel": "Username",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "oldPasswordLabel": "Old password",
+    "newPasswordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+
+    "usernameHint": "e.g. JohnDoe",
+    "emailHint": "abc@gmail.com",
+
+    "requiredUsername": "Username is required",
+    "minUsername": "At least 3 characters required",
+    "requiredEmail": "Email is required",
+    "invalidEmail": "Enter a valid email address",
+    "requiredPassword": "Password is required",
+    "minPassword": "Password must be at least 8 characters",
+    "confirmPasswordMismatch": "Confirm password must match new password",
+    "requiredOldPassword": "Old password is required",
+
+    "navProfile": "Profile",
+    "navHome": "Home",
+    "navSettings": "Settings",
+
+    "synopsis": "Synopsis",
+    "readMore": "Read more",
+    "showLess": "Show less",
+    "details": "Details",
+    "infoDirector": "Director",
+    "infoDuration": "Duration",
+    "infoGenres": "Genres",
+    "watchNow": "Watch Now",
+
+    "directedBy": "Directed by {director}",
+    "@directedBy": {
+        "placeholders": {
+            "director": {
+                "type": "String"
+            }
+        }
+    },
+
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "changePasswordButton": "Change password",
+    "logOut": "Log Out",
+    "sectionAccount": "Account",
+    "sectionSettings": "Settings",
+    "retry": "Retry",
+    "updateProfileButton": "Update profile",
+    "unexpectedError": "Unexpected error occurs",
+
+    "notificationsTitle": "Notifications",
+    "emptyNotifications": "No notifications yet",
+    "emptyNotificationsSub": "You're all caught up. Check back later.",
+    "failedLoadNotifications": "Failed to load notifications",
+
+    "videoPlayerTitle": "Video Player",
+    "popularSectionHeader": "Popular",
+    "discoverSectionHeader": "Discover"
+}
