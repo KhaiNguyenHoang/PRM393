@@ -113,6 +113,23 @@ class _ReviewSectionState extends State<ReviewSection> {
           const SizedBox(height: 12),
           Row(
             children: [
+              const Text("Rating: ", style: TextStyle(color: ColorTheme.textPrimary)),
+              ...List.generate(
+                5,
+                (i) => GestureDetector(
+                  onTap: () => setState(() => _rating = i + 1),
+                  child: Icon(
+                    Icons.star,
+                    color: i < _rating ? Colors.amber : Colors.grey,
+                    size: 28,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
               Expanded(
                 child: TextField(
                   controller: _controller,
