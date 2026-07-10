@@ -17,8 +17,12 @@ class MovieService {
     );
   }
 
-  Future<(List<Movie>, bool)> getMovies(int page, int size) async {
+  Future<(List<Movie>, bool)> getMovies(int page, int size, {String? searchKeyword}) async {
     try {
+      final queryParams = {"page": page.toString(), "size": size.toString()};
+      if (searchKeyword != null && searchKeyword.isNotEmpty) {
+        queryParams["searchKeyword"] = searchKeyword;
+      }
       // Make API call
       var resp = await _api.get(
         "/movies",
@@ -31,7 +35,7 @@ class MovieService {
           final metadata = PaginationMetadata.fromJson(map["metadata"]);
           return Pagination<Movie>(metadata: metadata, items: movies);
         },
-        queryParams: {"page": page.toString(), "size": size.toString()},
+        queryParams: queryParams,
         withAuth: true,
       );
 

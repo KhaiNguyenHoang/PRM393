@@ -5,6 +5,8 @@ import 'package:netmu/features/movies/widgets/badges.dart';
 import 'package:netmu/features/movies/widgets/movie_detail_appbar.dart';
 import 'package:netmu/features/movies/widgets/movie_player.dart';
 import 'package:netmu/l10n/app_localizations.dart';
+import 'package:netmu/features/favorites/widgets/favorite_button.dart';
+import 'package:netmu/features/movies/widgets/review_section.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
@@ -175,40 +177,56 @@ class _MovieDetailState extends State<MovieDetail> {
                   _InfoRow(label: l10n.infoGenres, value: movie.genres.join(', ')),
                   const SizedBox(height: 32),
 
-                  // Watch button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // TODO: navigate to video player with movie.videoUrl
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => VideoPage(url: movie.videoUrl),
+                  // Watch button & Favorite
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 54,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => VideoPage(url: movie.videoUrl),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.play_circle_fill_rounded,
+                              size: 22,
+                            ),
+                            label: Text(l10n.watchNow),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorTheme.buttonPrimary,
+                              foregroundColor: ColorTheme.textOnAccent,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.play_circle_fill_rounded,
-                        size: 22,
+                        ),
                       ),
-                      label: Text(l10n.watchNow),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorTheme.buttonPrimary,
-                        foregroundColor: ColorTheme.textOnAccent,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
+                      const SizedBox(width: 12),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: ColorTheme.surface,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.3,
-                        ),
+                        child: FavoriteButton(movieId: movie.id),
                       ),
-                    ),
+                    ],
                   ),
+                  const SizedBox(height: 24),
+                  const Divider(color: ColorTheme.border, height: 0.5),
+                  const SizedBox(height: 24),
+                  ReviewSection(movieId: movie.id),
                   const SizedBox(height: 12),
                 ],
               ),

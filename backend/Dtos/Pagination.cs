@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Netmu.Dtos;
 
@@ -20,6 +20,8 @@ public class PaginationParam
         get => _size;
         set => _size = value < 1 ? 10 : value;
     }
+
+    public string? SearchKeyword { get; set; }
 }
 
 public class PaginationMetadata
