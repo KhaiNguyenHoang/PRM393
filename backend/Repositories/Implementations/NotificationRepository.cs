@@ -47,4 +47,9 @@ public class NotificationRepository(AppDbContext context) : INotificationReposit
     {
         throw new NotImplementedException();
     }
+
+    public void HardDelete(Notification entity)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -7,6 +7,7 @@ import 'package:netmu/features/profile/widgets/change_password.dart';
 import 'package:netmu/features/profile/widgets/section_label.dart';
 import 'package:netmu/features/profile/widgets/update_profile.dart';
 import 'package:netmu/l10n/app_localizations.dart';
+import 'package:netmu/features/playlists/widgets/playlists_screen.dart' as netmu_playlists;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -216,6 +217,37 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // ── Playlists ─────────────────────────────────────────
+                    SectionLabel(label: "Playlists"),
+                    const SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: ColorTheme.surface,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: ColorTheme.border,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          ActionTile(
+                            icon: Icons.playlist_play_rounded,
+                            label: "My Playlists",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const netmu_playlists.PlaylistsScreen(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

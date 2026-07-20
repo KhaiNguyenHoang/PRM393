@@ -44,4 +44,9 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
         entity.UpdatedAt = DateTimeOffset.UtcNow;
         context.Set<T>().Update(entity);
     }
+
+    public void HardDelete(T entity)
+    {
+        context.Set<T>().Remove(entity);
+    }
 }

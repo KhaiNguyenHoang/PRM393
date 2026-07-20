@@ -40,4 +40,30 @@ public class ReviewsController(IReviewService reviewService) : ControllerBase
     {
         return Ok(await reviewService.GetReviewsAsync(movieId, param));
     }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateReview(Guid id, [FromBody] ReviewDtoRequest request)
+    {
+        try
+        {
+            var userId = GetUserIdFromToken();
+            await reviewService.UpdateReviewAsync(userId, id, request);
+            return Ok();
+        }
+        catch (UnauthorizedAccessException) { return Unauthorized(); }
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteReview(Guid id)
+    {
+        try
+        {
+            var userId = GetUserIdFromToken();
+            await reviewService.DeleteReviewAsync(userId, id);
+            return Ok();
+        }
+        catch (UnauthorizedAccessException) { return Unauthorized(); }
+    }
 }

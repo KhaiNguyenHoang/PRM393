@@ -36,6 +36,42 @@ class ReviewService {
     }
   }
 
+  Future<bool> updateReview(String reviewId, String content, int rating) async {
+    try {
+      await _api.put(
+        "/reviews/$reviewId",
+        body: {
+          "content": content,
+          "rating": rating,
+        },
+        withAuth: true,
+      );
+      return true;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return false;
+    } catch (e) {
+      NetmuLog.logger.e(e);
+      return false;
+    }
+  }
+
+  Future<bool> deleteReview(String reviewId) async {
+    try {
+      await _api.delete(
+        "/reviews/$reviewId",
+        withAuth: true,
+      );
+      return true;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return false;
+    } catch (e) {
+      NetmuLog.logger.e(e);
+      return false;
+    }
+  }
+
   Future<(List<Review>, bool)> getReviews(String movieId, int page, int size) async {
     try {
       var resp = await _api.get(

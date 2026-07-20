@@ -27,6 +27,29 @@ public class ReviewService(IUnitOfWork uow, UserManager<ApplicationUser> userMan
         return review.Id;
     }
 
+    public async Task UpdateReviewAsync(Guid userId, Guid reviewId, ReviewDtoRequest request)
+    {
+        var review = await uow.Repo<Review>().GetByIdAsync(reviewId);
+        if (review == null) throw new NotFoundException("Review not found");
+        if (review.UserId != userId) throw new UnauthorizedAccessException("You can only edit your own reviews");
+
+        review.Content = request.Content;
+        review.Rating = request.Rating;
+
+        uow.Repo<Review>().Update(review);
+        await uow.SaveChangesAsync();
+    }
+
+    public async Task DeleteReviewAsync(Guid userId, Guid reviewId)
+    {
+        var review = await uow.Repo<Review>().GetByIdAsync(reviewId);
+        if (review == null) throw new NotFoundException("Review not found");
+        if (review.UserId != userId) throw new UnauthorizedAccessException("You can only delete your own reviews");
+
+        uow.Repo<Review>().HardDelete(review);
+        await uow.SaveChangesAsync();
+    }
+
     public async Task<Pagination<ReviewDtoResponse>> GetReviewsAsync(Guid movieId, PaginationParam param)
     {
         var reviews = await uow.Repo<Review>().GetPagedListAsync(param.Page, param.Size, x => x.MovieId == movieId);

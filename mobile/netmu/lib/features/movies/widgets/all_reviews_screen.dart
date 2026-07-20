@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netmu/core/themes/theme.dart';
+import 'package:netmu/core/utils/api/token_storage.dart';
+import 'package:netmu/core/utils/jwt/jwt_utils.dart';
 import 'package:netmu/features/movies/models/review.dart';
 import 'package:netmu/features/movies/services/review_service.dart';
 
@@ -18,12 +20,30 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
   bool _isLoading = true;
   final TextEditingController _controller = TextEditingController();
   int _rating = 5;
+  String? _currentUserId;
+  String? _editingReviewId;
 
   @override
   void initState() {
     super.initState();
     _service = ReviewService(() => Navigator.pushNamedAndRemoveUntil(context, "/auth/login", (r) => false));
+    _loadCurrentUser();
     _loadReviews();
+  }
+
+  Future<void> _loadCurrentUser() async {
+    final storage = SecureTokenStorage();
+    final token = await storage.getAccessToken();
+    if (token != null) {
+      try {
+        final payload = JwtUtils.decode(token);
+        setState(() {
+          _currentUserId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ?? payload['sub'];
+        });
+      } catch (e) {
+        // ignore
+      }
+    }
   }
 
   Future<void> _loadReviews() async {
@@ -39,12 +59,56 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
   Future<void> _submitReview() async {
     if (_controller.text.isEmpty) return;
     setState(() => _isLoading = true);
-    final success = await _service.addReview(widget.movieId, _controller.text, _rating);
+    
+    bool success;
+    if (_editingReviewId != null) {
+      success = await _service.updateReview(_editingReviewId!, _controller.text, _rating);
+    } else {
+      success = await _service.addReview(widget.movieId, _controller.text, _rating);
+    }
+
     if (success) {
       _controller.clear();
+      setState(() {
+        _editingReviewId = null;
+        _rating = 5;
+      });
       await _loadReviews();
     } else {
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _editReview(Review review) {
+    setState(() {
+      _editingReviewId = review.id;
+      _controller.text = review.content;
+      _rating = review.rating ?? 5;
+    });
+  }
+
+  Future<void> _deleteReview(String reviewId) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: ColorTheme.surface,
+        title: const Text("Delete Review", style: TextStyle(color: ColorTheme.textPrimary)),
+        content: const Text("Are you sure you want to delete this review?", style: TextStyle(color: ColorTheme.textSecondary)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancel")),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("Delete", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      setState(() => _isLoading = true);
+      final success = await _service.deleteReview(reviewId);
+      if (success) {
+        await _loadReviews();
+      } else {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -71,6 +135,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                     itemCount: _reviews.length,
                     itemBuilder: (context, index) {
                       final review = _reviews[index];
+                      final isOwner = _currentUserId != null && review.userId == _currentUserId;
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(12),
@@ -84,9 +149,12 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  review.userName,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: ColorTheme.textPrimary),
+                                Expanded(
+                                  child: Text(
+                                    review.userName,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, color: ColorTheme.textPrimary),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                                 Row(
                                   children: List.generate(
@@ -98,6 +166,22 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                                     ),
                                   ),
                                 ),
+                                if (isOwner)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(width: 8),
+                                      GestureDetector(
+                                        onTap: () => _editReview(review),
+                                        child: const Icon(Icons.edit, size: 16, color: ColorTheme.buttonPrimary),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      GestureDetector(
+                                        onTap: () => _deleteReview(review.id!),
+                                        child: const Icon(Icons.delete, size: 16, color: Colors.redAccent),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 4),
@@ -123,6 +207,23 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        if (_editingReviewId != null)
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Editing Review...", style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _editingReviewId = null;
+                                    _controller.clear();
+                                    _rating = 5;
+                                  });
+                                },
+                                child: const Text("Cancel"),
+                              )
+                            ],
+                           ),
                         Row(
                           children: [
                             const Text("Rating: ", style: TextStyle(color: ColorTheme.textPrimary)),
@@ -145,11 +246,11 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                             Expanded(
                               child: TextField(
                                 controller: _controller,
-                                decoration: const InputDecoration(
-                                  hintText: "Write a review...",
+                                decoration: InputDecoration(
+                                  hintText: _editingReviewId != null ? "Edit your review..." : "Write a review...",
                                   filled: true,
                                   fillColor: ColorTheme.surface,
-                                  border: OutlineInputBorder(borderSide: BorderSide.none),
+                                  border: const OutlineInputBorder(borderSide: BorderSide.none),
                                 ),
                               ),
                             ),
@@ -168,3 +269,4 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
     );
   }
 }
+
