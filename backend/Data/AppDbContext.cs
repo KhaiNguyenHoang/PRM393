@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Netmu.Models;
@@ -9,6 +9,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 {
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<FavoriteMovie> FavoriteMovies { get; set; }
+    public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,11 +18,33 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
         modelBuilder.Entity<Movie>().ToTable("movies");
         modelBuilder.Entity<Notification>().ToTable("notifications");
+        modelBuilder.Entity<FavoriteMovie>().ToTable("favorite_movies");
+        modelBuilder.Entity<Review>().ToTable("reviews");
 
         modelBuilder.Entity<Notification>()
             .HasOne(x => x.Receiver)
             .WithMany(x => x.Notifications)
             .HasForeignKey(x => x.ReceiverId);
+
+        modelBuilder.Entity<FavoriteMovie>()
+            .HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
+
+        modelBuilder.Entity<FavoriteMovie>()
+            .HasOne(x => x.Movie)
+            .WithMany()
+            .HasForeignKey(x => x.MovieId);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
+
+        modelBuilder.Entity<Review>()
+            .HasOne(x => x.Movie)
+            .WithMany()
+            .HasForeignKey(x => x.MovieId);
 
         // Identity tables
         modelBuilder.Entity<ApplicationUser>().ToTable("users");

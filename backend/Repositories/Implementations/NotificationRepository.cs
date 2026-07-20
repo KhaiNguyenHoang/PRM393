@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Netmu.Data;
 using Netmu.Models;
 using Netmu.Repositories.Contracts;
@@ -33,7 +33,7 @@ public class NotificationRepository(AppDbContext context) : INotificationReposit
         throw new NotImplementedException();
     }
 
-    public Task<IPagedList<Notification>> GetPagedListAsync(int page, int size)
+    public Task<IPagedList<Notification>> GetPagedListAsync(int page, int size, System.Linq.Expressions.Expression<Func<Notification, bool>>? predicate = null)
     {
         throw new NotImplementedException();
     }

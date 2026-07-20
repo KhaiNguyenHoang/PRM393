@@ -1,4 +1,4 @@
-﻿using Netmu.Dtos;
+using Netmu.Dtos;
 using Netmu.Exceptions;
 using Netmu.Models;
 using Netmu.Repositories.Contracts;
@@ -56,7 +56,10 @@ public class MovieService(IUnitOfWork uow, INotificationService service) : IMovi
 
     public async Task<Pagination<MovieDtoResponse>> GetMoviesAsync(PaginationParam param)
     {
-        var movies = await uow.Repo<Movie>().GetPagedListAsync(param.Page, param.Size);
+        var movies = await uow.Repo<Movie>().GetPagedListAsync(param.Page, param.Size, string.IsNullOrWhiteSpace(param.SearchKeyword) 
+            ? null 
+            : x => x.Title.ToLower().Contains(param.SearchKeyword.ToLower()) || x.Director.ToLower().Contains(param.SearchKeyword.ToLower()));
+        
         var resp = movies.Select(x => new MovieDtoResponse()
         {
             Id = x.Id,

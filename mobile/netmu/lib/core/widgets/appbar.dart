@@ -3,6 +3,8 @@ import 'package:netmu/core/themes/theme.dart';
 import 'package:netmu/features/notifications/widgets/notification_badge.dart';
 import 'package:netmu/features/notifications/widgets/notification_page.dart';
 import 'package:netmu/l10n/app_localizations.dart';
+import 'package:netmu/features/movies/widgets/search_screen.dart' as netmu_search;
+import 'package:netmu/features/favorites/widgets/favorites_screen.dart' as netmu_favorites;
 
 class Appbar extends StatefulWidget implements PreferredSizeWidget {
   const Appbar({super.key});
@@ -58,6 +60,18 @@ class _AppbarState extends State<Appbar> {
         ),
       ),
       actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const netmu_search.SearchScreen()));
+          },
+          icon: const Icon(Icons.search_rounded, color: ColorTheme.textPrimary, size: 26),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const netmu_favorites.FavoritesScreen()));
+          },
+          icon: const Icon(Icons.favorite_border_rounded, color: ColorTheme.textPrimary, size: 26),
+        ),
         Stack(
           children: [
             IconButton(

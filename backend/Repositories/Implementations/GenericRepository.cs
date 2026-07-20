@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Netmu.Data;
 using Netmu.Models;
 using Netmu.Repositories.Contracts;
@@ -19,12 +19,14 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
         return await context.Set<T>().FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
     }
 
-    public async Task<IPagedList<T>> GetPagedListAsync(int page, int size)
+    public async Task<IPagedList<T>> GetPagedListAsync(int page, int size, System.Linq.Expressions.Expression<Func<T, bool>>? predicate = null)
     {
-        return await context.Set<T>()
-        .Where(x => !x.IsDeleted)
-        .OrderByDescending(x => x.UpdatedAt)
-        .ToPagedListAsync(page, size);
+        var query = context.Set<T>().Where(x => !x.IsDeleted);
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+        return await query.OrderByDescending(x => x.UpdatedAt).ToPagedListAsync(page, size);
     }
 
     public void Update(T entity, bool isEntityTracked = true)
