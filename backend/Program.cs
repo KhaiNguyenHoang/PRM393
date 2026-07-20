@@ -121,7 +121,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Christopher Nolan",
                 Genres = ["Sci-Fi", "Adventure"],
                 DurationInMinutes = 148,
-                VideoUrl = "https://www.youtube.com/watch?v=YoHD9XEInc0",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1534447677768-be436bb09401"
             },
             new()
@@ -131,7 +131,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Denis Villeneuve",
                 Genres = ["Thriller", "Mystery"],
                 DurationInMinutes = 124,
-                VideoUrl = "",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf_penta.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c"
             },
             new()
@@ -141,7 +141,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Michael Mann",
                 Genres = ["Crime", "Drama"],
                 DurationInMinutes = 132,
-                VideoUrl = "https://www.youtube.com/watch?v=EXeTwQWrcwY",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/soraka.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc"
             },
             new()
@@ -151,7 +151,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Guillermo del Toro",
                 Genres = ["Fantasy", "Adventure"],
                 DurationInMinutes = 115,
-                VideoUrl = "",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
             },
             new()
@@ -161,7 +161,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "David Fincher",
                 Genres = ["Action", "Thriller"],
                 DurationInMinutes = 127,
-                VideoUrl = "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/soraka.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475"
             },
             new()
@@ -181,7 +181,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "James Cameron",
                 Genres = ["Action", "Sci-Fi"],
                 DurationInMinutes = 141,
-                VideoUrl = "https://www.youtube.com/watch?v=TcMBFSGVi1c",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/soraka.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1506744038136-46273834b3fb"
             },
             new()
@@ -201,7 +201,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Justin Lin",
                 Genres = ["Action", "Sport"],
                 DurationInMinutes = 110,
-                VideoUrl = "https://www.youtube.com/watch?v=2g811Eo7K8U",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf_penta.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429"
             },
             new()
@@ -211,7 +211,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Peter Jackson",
                 Genres = ["Fantasy", "Drama"],
                 DurationInMinutes = 156,
-                VideoUrl = "",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf_penta.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1482192596544-9eb780fc7f66"
             },
             new()
@@ -221,7 +221,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Wes Anderson",
                 Genres = ["Drama", "Mystery"],
                 DurationInMinutes = 102,
-                VideoUrl = "",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf_penta.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b"
             },
             new()
@@ -231,7 +231,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Joseph Kosinski",
                 Genres = ["Action", "Adventure"],
                 DurationInMinutes = 129,
-                VideoUrl = "https://www.youtube.com/watch?v=giXco2jaZ_4",
+                VideoUrl = "https://raw.githubusercontent.com/KhaiNguyenHoang/PRM393/main/data/mf.mp4",
                 ImageUrl = "https://images.unsplash.com/photo-1473448912268-2022ce9509d8"
             },
             new()
@@ -261,7 +261,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "Alfonso Cuarón",
                 Genres = ["Sci-Fi", "Drama"],
                 DurationInMinutes = 97,
-                VideoUrl = "https://www.youtube.com/watch?v=OiTiKOy59o4",
+                VideoUrl = "",
                 ImageUrl = "https://images.unsplash.com/photo-1462331940025-496dfbfc7564"
             },
             new()
@@ -291,7 +291,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "James Wan",
                 Genres = ["Horror", "Sci-Fi"],
                 DurationInMinutes = 113,
-                VideoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                VideoUrl = "",
                 ImageUrl = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
             },
             new()
@@ -311,7 +311,7 @@ using (var scope = app.Services.CreateScope())
                 Director = "George Miller",
                 Genres = ["Action", "Sci-Fi"],
                 DurationInMinutes = 134,
-                VideoUrl = "https://www.youtube.com/watch?v=hA6hldpSTF8",
+                VideoUrl = "",
                 ImageUrl = "https://images.unsplash.com/photo-1500534623283-312aade485b7"
             }
         };
