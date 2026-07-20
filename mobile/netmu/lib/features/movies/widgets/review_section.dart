@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:netmu/core/themes/theme.dart';
 import 'package:netmu/features/movies/models/review.dart';
 import 'package:netmu/features/movies/services/review_service.dart';
+import 'package:netmu/features/movies/widgets/all_reviews_screen.dart' as netmu_reviews;
+import 'dart:math' as math;
 
 class ReviewSection extends StatefulWidget {
   final String movieId;
@@ -53,13 +55,33 @@ class _ReviewSectionState extends State<ReviewSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Reviews",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: ColorTheme.textPrimary,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Reviews",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: ColorTheme.textPrimary,
+              ),
+            ),
+            if (!_isLoading && _reviews.isNotEmpty)
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => netmu_reviews.AllReviewsScreen(movieId: widget.movieId),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "View All",
+                  style: TextStyle(color: ColorTheme.buttonPrimary),
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 12),
         if (_isLoading)
@@ -68,7 +90,7 @@ class _ReviewSectionState extends State<ReviewSection> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: _reviews.length,
+            itemCount: math.min(3, _reviews.length),
             itemBuilder: (context, index) {
               final review = _reviews[index];
               return Container(

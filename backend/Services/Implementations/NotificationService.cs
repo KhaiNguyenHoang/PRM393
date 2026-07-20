@@ -1,4 +1,4 @@
-﻿using FirebaseAdmin;
+using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Identity;
@@ -19,10 +19,12 @@ public class FcmSettings
 
 public class Fcm(IOptions<FcmSettings> settings)
 {
-    private readonly FirebaseApp _app = FirebaseApp.Create(new AppOptions()
-    {
-        Credential = GetCredential(settings.Value.CredentialFileLocation, settings.Value.Scopes),
-    });
+    private readonly FirebaseApp? _app = string.IsNullOrWhiteSpace(settings.Value.CredentialFileLocation)
+        ? null
+        : FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GetCredential(settings.Value.CredentialFileLocation, settings.Value.Scopes),
+        });
 
     /// <summary>
     /// Helper method to get Google credential for FCM
@@ -44,6 +46,8 @@ public class Fcm(IOptions<FcmSettings> settings)
     /// <returns></returns>
     public async Task<bool> SendNotificationsAsync(List<string> devices, MessagePayload payload)
     {
+        if (_app == null) return true; // Mock success if FCM is not configured
+
         // Create messages list
         var messages = devices.Select(device => new Message()
         {
