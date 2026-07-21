@@ -106,6 +106,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navHistory => 'History';
+
+  @override
+  String get navFavorites => 'Favorites';
+
+  @override
+  String get navAdmin => 'Admin';
+
+  @override
   String get navSettings => 'Settings';
 
   @override
@@ -128,6 +137,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get infoGenres => 'Genres';
+
+  @override
+  String get infoActors => 'Actors';
 
   @override
   String get watchNow => 'Watch Now';

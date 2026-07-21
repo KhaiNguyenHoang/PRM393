@@ -47,6 +47,9 @@
 
     "navProfile": "Hồ sơ",
     "navHome": "Trang chủ",
+    "navHistory": "Lịch sử",
+    "navFavorites": "Yêu thích",
+    "navAdmin": "Quản trị",
     "navSettings": "Cài đặt",
 
     "synopsis": "Tóm tắt",
@@ -56,6 +59,7 @@
     "infoDirector": "Đạo diễn",
     "infoDuration": "Thời lượng",
     "infoGenres": "Thể loại",
+    "infoActors": "Diễn viên",
     "watchNow": "Xem ngay",
 
     "directedBy": "Đạo diễn: {director}",

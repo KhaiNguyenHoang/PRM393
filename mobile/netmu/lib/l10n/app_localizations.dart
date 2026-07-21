@@ -290,6 +290,24 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get navHome;
 
+  /// No description provided for @navHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get navHistory;
+
+  /// No description provided for @navFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get navFavorites;
+
+  /// No description provided for @navAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get navAdmin;
+
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
@@ -337,6 +355,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Genres'**
   String get infoGenres;
+
+  /// No description provided for @infoActors.
+  ///
+  /// In en, this message translates to:
+  /// **'Actors'**
+  String get infoActors;
 
   /// No description provided for @watchNow.
   ///

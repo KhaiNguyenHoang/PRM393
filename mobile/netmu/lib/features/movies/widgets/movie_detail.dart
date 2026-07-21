@@ -40,17 +40,14 @@ class _MovieDetailState extends State<MovieDetail> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          // Custom app bar
           CustomAppBar(context: context, bannerUrl: movie.imageUrl),
 
-          // Body content
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 32),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   const SizedBox(height: 30),
                   Text(
                     movie.title,
@@ -64,28 +61,25 @@ class _MovieDetailState extends State<MovieDetail> {
                   ),
                   const SizedBox(height: 6),
 
-                  // Director
-                  Text(
-                    l10n.directedBy(movie.director),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: ColorTheme.textSecondary,
-                      fontWeight: FontWeight.w400,
+                  if (movie.directors.isNotEmpty)
+                    Text(
+                      l10n.directedBy(movie.directorNames),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: ColorTheme.textSecondary,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 16),
 
-                  // Duration + genres
                   Row(
                     children: [
-                      // Duration
                       CustomBadge(
                         icon: Icons.schedule_rounded,
                         label: _formattedDuration,
                       ),
                       const SizedBox(width: 8),
 
-                      // Genres
                       Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -95,7 +89,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                 .map(
                                   (g) => Padding(
                                     padding: const EdgeInsets.only(right: 8),
-                                    child: CustomBadge(icon: null, label: g),
+                                    child: CustomBadge(icon: null, label: g.name),
                                   ),
                                 )
                                 .toList(),
@@ -109,7 +103,6 @@ class _MovieDetailState extends State<MovieDetail> {
                   const Divider(color: ColorTheme.border, height: 0.5),
                   const SizedBox(height: 24),
 
-                  // Description
                   Text(
                     l10n.synopsis,
                     style: const TextStyle(
@@ -173,12 +166,12 @@ class _MovieDetailState extends State<MovieDetail> {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  _InfoRow(label: l10n.infoDirector, value: movie.director),
+                  _InfoRow(label: l10n.infoDirector, value: movie.directorNames),
                   _InfoRow(label: l10n.infoDuration, value: _formattedDuration),
-                  _InfoRow(label: l10n.infoGenres, value: movie.genres.join(', ')),
+                  _InfoRow(label: l10n.infoGenres, value: movie.genreNames.join(', ')),
+                  _InfoRow(label: l10n.infoActors, value: movie.actorNames),
                   const SizedBox(height: 32),
 
-                  // Watch button & Favorite
                   Row(
                     children: [
                       Expanded(
@@ -189,7 +182,10 @@ class _MovieDetailState extends State<MovieDetail> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => VideoPage(url: movie.videoUrl),
+                                  builder: (_) => VideoPage(
+                                    url: movie.videoUrl,
+                                    movieId: movie.id,
+                                  ),
                                 ),
                               );
                             },

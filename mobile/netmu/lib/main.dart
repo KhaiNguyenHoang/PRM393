@@ -1,10 +1,11 @@
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:netmu/core/utils/api/token_storage.dart';
 import 'package:netmu/core/utils/logger/logger.dart';
+import 'package:netmu/features/home/splash_screen.dart';
 import 'package:netmu/features/notifications/widgets/notification_badge.dart';
 import 'package:netmu/features/auth/screens/login_screen.dart';
 import 'package:netmu/features/auth/screens/register_screen.dart';
@@ -13,41 +14,43 @@ import 'package:netmu/features/settings/services/locale_provider.dart';
 import 'package:netmu/l10n/app_localizations.dart';
 import 'package:netmu/l10n/l10n.dart';
 
-// @pragma('vm:entry-point')
-// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-// }
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  try {
+    // await Firebase.initializeApp(); // Assuming options aren't strictly needed for background in this case, or can be skipped if missing
+  } catch (e) {
+    // Ignore
+  }
+}
 
 Future<void> main() async {
-  // Load .env
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
     NetmuLog.logger.e("Error loading .env file: $e");
   }
 
-  // Get token storage
   final storage = SecureTokenStorage();
-
-  // Check if user is logged in
   var isLoggedIn = await storage.getAccessToken() != null;
+
   NetmuLog.logger.i("Is user logged in: $isLoggedIn");
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Register Firebase Cloud Messaging
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
-  // await messaging.requestPermission();
-  // FirebaseMessaging.onMessage.listen((_) {
-  //   NotificationBadgeNotifier.instance.show();
-  // });
+  try {
+    await Firebase.initializeApp(); // Assuming DefaultFirebaseOptions isn't imported, let it use default
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission();
+    FirebaseMessaging.onMessage.listen((_) {
+      NotificationBadgeNotifier.instance.show();
+    });
+  } catch (e) {
+    NetmuLog.logger.e("Firebase init failed: $e");
+  }
 
-  // Load saved locale before running app
   await LocaleProvider.instance.loadInitial();
 
-  // Run app
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
@@ -65,14 +68,14 @@ class MyApp extends StatelessWidget {
           title: 'Netmu',
           initialRoute: "/",
           routes: {
-            "/": (context) => isLoggedIn ? HomePage() : LoginScreen(),
+            "/": (context) => isLoggedIn ? const HomePage() : const WelcomeScreen(),
             "/auth/register": (context) => RegisterScreen(),
             "/auth/login": (context) => LoginScreen(),
-            "/main": (context) => HomePage(),
+            "/main": (context) => const HomePage(),
           },
           supportedLocales: L10n.all,
           locale: LocaleProvider.instance.locale,
-          localizationsDelegates: [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
