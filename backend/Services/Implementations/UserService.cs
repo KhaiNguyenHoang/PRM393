@@ -59,7 +59,7 @@ public class UserService(
             Issuer = jwtSection["Issuer"] ?? "Netmu",
             Audience = jwtSection["Audience"] ?? "Netmu-Mobile",
             ExpiresInMinutes = int.Parse(jwtSection["ExpiresInMinutes"] ?? "60"),
-        }, jwtSection["Key"]!);
+        }, jwtSection["Secret"]!);
 
         return new LoginDtoResponse
         {
