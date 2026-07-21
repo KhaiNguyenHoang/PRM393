@@ -109,6 +109,11 @@ public class PlaylistService(IUnitOfWork uow, AppDbContext context) : IPlaylistS
         var movies = await context.PlaylistMovies
             .Where(x => x.PlaylistId == playlistId && !x.IsDeleted)
             .Include(x => x.Movie)
+                .ThenInclude(x => x.MovieGenres).ThenInclude(x => x.Genre)
+            .Include(x => x.Movie)
+                .ThenInclude(x => x.MovieDirectors).ThenInclude(x => x.Director)
+            .Include(x => x.Movie)
+                .ThenInclude(x => x.MovieActors).ThenInclude(x => x.Actor)
             .Select(x => x.Movie)
             .ToListAsync();
 
@@ -117,11 +122,18 @@ public class PlaylistService(IUnitOfWork uow, AppDbContext context) : IPlaylistS
             Id = m.Id,
             Title = m.Title,
             Description = m.Description,
-            Director = m.Director,
-            Genres = m.Genres,
             DurationInMinutes = m.DurationInMinutes,
             VideoUrl = m.VideoUrl,
-            ImageUrl = m.ImageUrl
+            ImageUrl = m.ImageUrl,
+            Genres = m.MovieGenres
+                .Where(mg => mg.Genre != null && !mg.Genre.IsDeleted)
+                .Select(mg => new GenreDto { Id = mg.Genre.Id, Name = mg.Genre.Name }).ToList(),
+            Directors = m.MovieDirectors
+                .Where(md => md.Director != null && !md.Director.IsDeleted)
+                .Select(md => new DirectorDto { Id = md.Director.Id, Name = md.Director.Name, Bio = md.Director.Bio, ImageUrl = md.Director.ImageUrl }).ToList(),
+            Actors = m.MovieActors
+                .Where(ma => ma.Actor != null && !ma.Actor.IsDeleted)
+                .Select(ma => new ActorDto { Id = ma.Actor.Id, Name = ma.Actor.Name, Bio = ma.Actor.Bio, ImageUrl = ma.Actor.ImageUrl }).ToList(),
         }).ToList();
     }
 }
