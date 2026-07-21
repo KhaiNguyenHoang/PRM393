@@ -47,6 +47,9 @@
 
     "navProfile": "Profile",
     "navHome": "Home",
+    "navHistory": "History",
+    "navFavorites": "Favorites",
+    "navAdmin": "Admin",
     "navSettings": "Settings",
 
     "synopsis": "Synopsis",
@@ -56,6 +59,7 @@
     "infoDirector": "Director",
     "infoDuration": "Duration",
     "infoGenres": "Genres",
+    "infoActors": "Actors",
     "watchNow": "Watch Now",
 
     "directedBy": "Directed by {director}",

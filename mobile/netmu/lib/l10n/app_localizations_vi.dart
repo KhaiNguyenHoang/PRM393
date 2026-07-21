@@ -105,6 +105,15 @@ class AppLocalizationsVi extends AppLocalizations {
   String get navHome => 'Trang chủ';
 
   @override
+  String get navHistory => 'Lịch sử';
+
+  @override
+  String get navFavorites => 'Yêu thích';
+
+  @override
+  String get navAdmin => 'Quản trị';
+
+  @override
   String get navSettings => 'Cài đặt';
 
   @override
@@ -127,6 +136,9 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get infoGenres => 'Thể loại';
+
+  @override
+  String get infoActors => 'Diễn viên';
 
   @override
   String get watchNow => 'Xem ngay';

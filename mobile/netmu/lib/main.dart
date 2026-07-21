@@ -21,7 +21,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
-  // Load .env
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
@@ -29,14 +28,11 @@ Future<void> main() async {
     return;
   }
 
-  // Get token storage
   final storage = SecureTokenStorage();
-
-  // Check if user is logged in
   var isLoggedIn = await storage.getAccessToken() != null;
+
   NetmuLog.logger.i("Is user logged in: $isLoggedIn");
 
-  // Register Firebase Cloud Messaging
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -47,15 +43,12 @@ Future<void> main() async {
 
   await messaging.requestPermission();
 
-  // Show badge when a notification arrives while app is in foreground
   FirebaseMessaging.onMessage.listen((_) {
     NotificationBadgeNotifier.instance.show();
   });
 
-  // Load saved locale before running app
   await LocaleProvider.instance.loadInitial();
 
-  // Run app
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
@@ -73,10 +66,11 @@ class MyApp extends StatelessWidget {
           title: 'Netmu',
           initialRoute: "/",
           routes: {
-            "/": (context) => isLoggedIn ? HomePage() : WelcomeScreen(),
+            "/": (context) =>
+                isLoggedIn ? const HomePage() : const WelcomeScreen(),
             "/auth/register": (context) => RegisterScreen(),
             "/auth/login": (context) => LoginScreen(),
-            "/main": (context) => HomePage(),
+            "/main": (context) => const HomePage(),
           },
           supportedLocales: L10n.all,
           locale: LocaleProvider.instance.locale,

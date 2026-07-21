@@ -8,12 +8,13 @@ public class Movie : Base
     public string Title { get; set; } = string.Empty;
     [MaxLength(500)]
     public string Description { get; set; } = string.Empty;
-    [MaxLength(100)]
-    public string Director { get; set; } = string.Empty;
-    public List<string> Genres { get; set; } = [];
     public int DurationInMinutes { get; set; }
     [MaxLength(300)]
     public string VideoUrl { get; set; } = string.Empty;
     [MaxLength(300)]
     public string ImageUrl { get; set; } = string.Empty;
+
+    public ICollection<MovieGenre> MovieGenres { get; set; } = [];
+    public ICollection<MovieDirector> MovieDirectors { get; set; } = [];
+    public ICollection<MovieActor> MovieActors { get; set; } = [];
 }

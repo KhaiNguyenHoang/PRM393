@@ -57,13 +57,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   separatorBuilder: (_, __) => const SizedBox(height: 14),
                   itemBuilder: (context, index) {
                     final fav = _favorites[index];
-                    // Convert FavoriteMovie to a mock Movie to reuse DiscoverCard
                     final mockMovie = Movie(
                       id: fav.movieId,
                       title: fav.title,
                       description: "",
-                      director: "",
                       genres: [],
+                      directors: [],
+                      actors: [],
                       durationInMinutes: 0,
                       videoUrl: "",
                       imageUrl: fav.imageUrl,

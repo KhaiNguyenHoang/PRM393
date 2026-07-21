@@ -75,6 +75,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IActorService, ActorService>();
+builder.Services.AddScoped<IHistoryService, HistoryService>();
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddSingleton<Fcm>();
 
 // Options pattern
@@ -112,7 +117,7 @@ using (var scope = app.Services.CreateScope())
 
     if (!await context.Movies.AnyAsync())
     {
-        var movies = new List<Movie>
+        var movieSeeds = new List<MovieSeed>
         {
             new()
             {
@@ -316,8 +321,61 @@ using (var scope = app.Services.CreateScope())
             }
         };
 
+        var movies = movieSeeds.Select(s => new Movie
+        {
+            Title = s.Title,
+            Description = s.Description,
+            DurationInMinutes = s.DurationInMinutes,
+            VideoUrl = s.VideoUrl,
+            ImageUrl = s.ImageUrl,
+        }).ToList();
+
         await context.Movies.AddRangeAsync(movies);
         await context.SaveChangesAsync();
+
+        // Seed genres, directors, actors derived from movies
+        if (!await context.Genres.AnyAsync())
+        {
+            var genres = movieSeeds
+                .SelectMany(m => m.Genres)
+                .Distinct()
+                .Select(g => new Genre { Name = g })
+                .ToList();
+            await context.Genres.AddRangeAsync(genres);
+            await context.SaveChangesAsync();
+
+            var directors = movieSeeds
+                .Select(m => m.Director)
+                .Where(d => !string.IsNullOrWhiteSpace(d))
+                .Distinct()
+                .Select(d => new Director { Name = d })
+                .ToList();
+            await context.Directors.AddRangeAsync(directors);
+            await context.SaveChangesAsync();
+
+            // Link movies to seed genres/directors
+            foreach (var seed in movieSeeds)
+            {
+                var dbMovie = await context.Movies.FirstOrDefaultAsync(x => x.Title == seed.Title);
+                if (dbMovie == null) continue;
+
+                foreach (var g in seed.Genres)
+                {
+                    var genre = await context.Genres.FirstOrDefaultAsync(x => x.Name == g);
+                    if (genre != null)
+                        await context.MovieGenres.AddAsync(new MovieGenre { MovieId = dbMovie.Id, GenreId = genre.Id });
+                }
+
+                if (!string.IsNullOrWhiteSpace(seed.Director))
+                {
+                    var director = await context.Directors.FirstOrDefaultAsync(x => x.Name == seed.Director);
+                    if (director != null)
+                        await context.MovieDirectors.AddAsync(new MovieDirector { MovieId = dbMovie.Id, DirectorId = director.Id });
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }
 
@@ -338,3 +396,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+file record MovieSeed
+{
+    public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string Director { get; set; } = string.Empty;
+    public List<string> Genres { get; set; } = [];
+    public int DurationInMinutes { get; set; }
+    public string VideoUrl { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+}

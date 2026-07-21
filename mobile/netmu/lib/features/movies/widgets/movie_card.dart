@@ -25,7 +25,6 @@ class PopularCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster image
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -33,8 +32,6 @@ class PopularCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-
-            // Title
             MovieTitle(title: movie.title, maxLine: 2),
           ],
         ),
@@ -67,39 +64,29 @@ class DiscoverCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Landscape image
             AspectRatio(
               aspectRatio: 16 / 9,
               child: MovieCardBanner(url: movie.imageUrl),
             ),
-
-            // Info
             Padding(
               padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   MovieTitle(title: movie.title, maxLine: 2),
                   const SizedBox(height: 8),
-
-                  // Genres + duration row
                   Row(
                     children: [
-                      // Genre chips
                       Expanded(
                         child: Wrap(
                           spacing: 6,
                           runSpacing: 6,
-                          children: movie.genres
-                              // .map((g) => GenreBadge(label: g))
+                          children: movie.genreNames
                               .map((g) => CustomBadge(icon: null, label: g))
                               .toList(),
                         ),
                       ),
                       const SizedBox(width: 8),
-
-                      // Duration
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

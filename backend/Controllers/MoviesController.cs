@@ -57,4 +57,14 @@ public class MoviesController(IMovieService service) : ControllerBase
         await service.DeleteMovieAsync(id);
         return NoContent();
     }
+
+    [HttpPost]
+    [Route("{id:guid}/play")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> PlayMovie(Guid id)
+    {
+        var movie = await service.GetMovieAsync(id);
+        return Ok(movie);
+    }
 }

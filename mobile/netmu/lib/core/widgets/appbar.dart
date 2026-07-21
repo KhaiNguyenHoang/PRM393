@@ -4,10 +4,11 @@ import 'package:netmu/features/notifications/widgets/notification_badge.dart';
 import 'package:netmu/features/notifications/widgets/notification_page.dart';
 import 'package:netmu/l10n/app_localizations.dart';
 import 'package:netmu/features/movies/widgets/search_screen.dart' as netmu_search;
-import 'package:netmu/features/favorites/widgets/favorites_screen.dart' as netmu_favorites;
 
 class Appbar extends StatefulWidget implements PreferredSizeWidget {
-  const Appbar({super.key});
+  final bool isAdmin;
+
+  const Appbar({super.key, this.isAdmin = false});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -59,48 +60,44 @@ class _AppbarState extends State<Appbar> {
           color: ColorTheme.textPrimary,
         ),
       ),
-      actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const netmu_search.SearchScreen()));
-          },
-          icon: const Icon(Icons.search_rounded, color: ColorTheme.textPrimary, size: 26),
-        ),
-        IconButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const netmu_favorites.FavoritesScreen()));
-          },
-          icon: const Icon(Icons.favorite_border_rounded, color: ColorTheme.textPrimary, size: 26),
-        ),
-        Stack(
-          children: [
-            IconButton(
-              onPressed: _onNotificationTap,
-              icon: Icon(
-                hasNew
-                    ? Icons.notifications_active_rounded
-                    : Icons.notifications_outlined,
-                color: hasNew ? ColorTheme.accent : ColorTheme.textPrimary,
-                size: 26,
+      actions: widget.isAdmin
+          ? []
+          : [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const netmu_search.SearchScreen()));
+                },
+                icon: const Icon(Icons.search_rounded, color: ColorTheme.textPrimary, size: 26),
               ),
-            ),
-            if (hasNew)
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: ColorTheme.accent,
-                    shape: BoxShape.circle,
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: _onNotificationTap,
+                    icon: Icon(
+                      hasNew
+                          ? Icons.notifications_active_rounded
+                          : Icons.notifications_outlined,
+                      color: hasNew ? ColorTheme.accent : ColorTheme.textPrimary,
+                      size: 26,
+                    ),
                   ),
-                ),
+                  if (hasNew)
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: ColorTheme.accent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
-        const SizedBox(width: 4),
-      ],
+              const SizedBox(width: 4),
+            ],
     );
   }
 }

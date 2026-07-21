@@ -17,13 +17,30 @@ class MovieService {
     );
   }
 
-  Future<(List<Movie>, bool)> getMovies(int page, int size, {String? searchKeyword}) async {
+  Future<Movie?> getMovie(String id) async {
+    try {
+      final resp = await _api.get(
+        "/movies/$id",
+        fromJson: (data) => Movie.fromJson(data as Map<String, dynamic>),
+        withAuth: true,
+      );
+      return resp.data;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return null;
+    } on Exception catch (e) {
+      NetmuLog.logger.e(e);
+      return null;
+    }
+  }
+
+  Future<(List<Movie>, bool)> getMovies(int page, int size,
+      {String? searchKeyword}) async {
     try {
       final queryParams = {"page": page.toString(), "size": size.toString()};
       if (searchKeyword != null && searchKeyword.isNotEmpty) {
         queryParams["searchKeyword"] = searchKeyword;
       }
-      // Make API call
       var resp = await _api.get(
         "/movies",
         fromJson: (data) {
@@ -45,7 +62,6 @@ class MovieService {
         return (List<Movie>.empty(), false);
       }
 
-      // NetmuLog.logger.i(data.metadata.hasNextPage);
       return (data.items, data.metadata.hasNextPage);
     } on ApiException catch (e) {
       NetmuLog.logger.e("${e.statusCode} - ${e.message}");
@@ -53,6 +69,56 @@ class MovieService {
     } on Exception catch (e) {
       NetmuLog.logger.e(e);
       return (List<Movie>.empty(), false);
+    }
+  }
+
+  Future<bool> createMovie(Map<String, dynamic> body) async {
+    try {
+      await _api.post(
+        "/movies",
+        body: body,
+        withAuth: true,
+      );
+      return true;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return false;
+    } catch (e) {
+      NetmuLog.logger.e(e);
+      return false;
+    }
+  }
+
+  Future<bool> updateMovie(String id, Map<String, dynamic> body) async {
+    try {
+      await _api.put(
+        "/movies/$id",
+        body: body,
+        withAuth: true,
+      );
+      return true;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return false;
+    } catch (e) {
+      NetmuLog.logger.e(e);
+      return false;
+    }
+  }
+
+  Future<bool> deleteMovie(String id) async {
+    try {
+      await _api.delete(
+        "/movies/$id",
+        withAuth: true,
+      );
+      return true;
+    } on ApiException catch (e) {
+      NetmuLog.logger.e("${e.statusCode} - ${e.message}");
+      return false;
+    } catch (e) {
+      NetmuLog.logger.e(e);
+      return false;
     }
   }
 }

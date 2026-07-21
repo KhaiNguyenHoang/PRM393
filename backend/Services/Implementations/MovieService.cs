@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Netmu.Data;
+using X.PagedList.EF;
 using Netmu.Dtos;
 using Netmu.Exceptions;
 using Netmu.Models;
@@ -6,19 +9,49 @@ using Netmu.Services.Contracts;
 
 namespace Netmu.Services.Implementations;
 
-public class MovieService(IUnitOfWork uow, INotificationService service) : IMovieService
+public class MovieService(AppDbContext context, IUnitOfWork uow, INotificationService service) : IMovieService
 {
+    private static MovieDtoResponse ToResponse(Movie movie) => new()
+    {
+        Id = movie.Id,
+        Title = movie.Title,
+        Description = movie.Description,
+        DurationInMinutes = movie.DurationInMinutes,
+        ImageUrl = movie.ImageUrl,
+        VideoUrl = movie.VideoUrl,
+        Genres = movie.MovieGenres
+            .Where(mg => mg.Genre != null && !mg.Genre.IsDeleted)
+            .Select(mg => new GenreDto { Id = mg.Genre.Id, Name = mg.Genre.Name }).ToList(),
+        Directors = movie.MovieDirectors
+            .Where(md => md.Director != null && !md.Director.IsDeleted)
+            .Select(md => new DirectorDto { Id = md.Director.Id, Name = md.Director.Name, Bio = md.Director.Bio, ImageUrl = md.Director.ImageUrl }).ToList(),
+        Actors = movie.MovieActors
+            .Where(ma => ma.Actor != null && !ma.Actor.IsDeleted)
+            .Select(ma => new ActorDto { Id = ma.Actor.Id, Name = ma.Actor.Name, Bio = ma.Actor.Bio, ImageUrl = ma.Actor.ImageUrl }).ToList(),
+    };
+
+    private async Task<Movie?> GetMovieWithRelationsAsync(Guid id)
+    {
+        return await context.Movies
+            .Where(x => x.Id == id && !x.IsDeleted)
+            .Include(x => x.MovieGenres).ThenInclude(x => x.Genre)
+            .Include(x => x.MovieDirectors).ThenInclude(x => x.Director)
+            .Include(x => x.MovieActors).ThenInclude(x => x.Actor)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<Guid> CreateMovieAsync(MovieDtoRequest request)
     {
         var movie = new Movie()
         {
             Title = request.Title,
             Description = request.Description,
-            Director = request.Director,
             DurationInMinutes = request.DurationInMinutes,
-            Genres = request.Genres,
             ImageUrl = request.ImageUrl,
             VideoUrl = request.VideoUrl,
+            MovieGenres = [.. request.GenreIds.Select(g => new MovieGenre { GenreId = g })],
+            MovieDirectors = [.. request.DirectorIds.Select(d => new MovieDirector { DirectorId = d })],
+            MovieActors = [.. request.ActorIds.Select(a => new MovieActor { ActorId = a })],
         };
 
         await uow.Repo<Movie>().CreateAsync(movie);
@@ -33,44 +66,32 @@ public class MovieService(IUnitOfWork uow, INotificationService service) : IMovi
 
     public async Task<MovieDtoResponse> GetMovieAsync(Guid id)
     {
-        var movie = await uow.Repo<Movie>().GetByIdAsync(id);
+        var movie = await GetMovieWithRelationsAsync(id);
         if (movie == null)
         {
             throw new NotFoundException("Movie not found");
         }
 
-        var resp = new MovieDtoResponse()
-        {
-            Description = movie.Description,
-            Title = movie.Title,
-            Director = movie.Director,
-            DurationInMinutes = movie.DurationInMinutes,
-            Genres = movie.Genres,
-            ImageUrl = movie.ImageUrl,
-            VideoUrl = movie.VideoUrl,
-            Id = movie.Id
-        };
-
-        return resp;
+        return ToResponse(movie);
     }
 
     public async Task<Pagination<MovieDtoResponse>> GetMoviesAsync(PaginationParam param)
     {
-        var movies = await uow.Repo<Movie>().GetPagedListAsync(param.Page, param.Size, string.IsNullOrWhiteSpace(param.SearchKeyword) 
-            ? null 
-            : x => x.Title.ToLower().Contains(param.SearchKeyword.ToLower()) || x.Director.ToLower().Contains(param.SearchKeyword.ToLower()));
-        
-        var resp = movies.Select(x => new MovieDtoResponse()
-        {
-            Id = x.Id,
-            Title = x.Title,
-            Description = x.Description,
-            Director = x.Director,
-            DurationInMinutes = x.DurationInMinutes,
-            Genres = x.Genres,
-            ImageUrl = x.ImageUrl,
-            VideoUrl = x.VideoUrl,
-        });
+        var keyword = param.SearchKeyword?.ToLower();
+        var movies = await context.Movies
+            .Where(x => !x.IsDeleted)
+            .Where(x => string.IsNullOrWhiteSpace(keyword)
+                || x.Title.ToLower().Contains(keyword)
+                || x.MovieDirectors.Any(md => md.Director.Name.ToLower().Contains(keyword))
+                || x.MovieActors.Any(ma => ma.Actor.Name.ToLower().Contains(keyword))
+                || x.MovieGenres.Any(mg => mg.Genre.Name.ToLower().Contains(keyword)))
+            .Include(x => x.MovieGenres).ThenInclude(x => x.Genre)
+            .Include(x => x.MovieDirectors).ThenInclude(x => x.Director)
+            .Include(x => x.MovieActors).ThenInclude(x => x.Actor)
+            .OrderByDescending(x => x.UpdatedAt)
+            .ToPagedListAsync(param.Page, param.Size);
+
+        var resp = movies.Select(ToResponse);
         var metadata = new PaginationMetadata()
         {
             CurrentPage = movies.PageNumber,
@@ -85,7 +106,7 @@ public class MovieService(IUnitOfWork uow, INotificationService service) : IMovi
 
     public async Task<MovieDtoResponse> UpdateMovieAsync(Guid id, MovieDtoRequest request)
     {
-        var movie = await uow.Repo<Movie>().GetByIdAsync(id);
+        var movie = await GetMovieWithRelationsAsync(id);
         if (movie == null)
         {
             throw new BadRequestException("Movie not found");
@@ -93,36 +114,36 @@ public class MovieService(IUnitOfWork uow, INotificationService service) : IMovi
 
         movie.Title = request.Title;
         movie.Description = request.Description;
-        movie.Director = request.Director;
         movie.DurationInMinutes = request.DurationInMinutes;
-        movie.Genres = request.Genres;
         movie.ImageUrl = request.ImageUrl;
         movie.VideoUrl = request.VideoUrl;
+
+        movie.MovieGenres.Clear();
+        movie.MovieGenres = [.. request.GenreIds.Select(g => new MovieGenre { MovieId = movie.Id, GenreId = g })];
+        movie.MovieDirectors.Clear();
+        movie.MovieDirectors = [.. request.DirectorIds.Select(d => new MovieDirector { MovieId = movie.Id, DirectorId = d })];
+        movie.MovieActors.Clear();
+        movie.MovieActors = [.. request.ActorIds.Select(a => new MovieActor { MovieId = movie.Id, ActorId = a })];
 
         uow.Repo<Movie>().Update(movie);
         await uow.SaveChangesAsync();
 
-        return new MovieDtoResponse()
-        {
-            Id = movie.Id,
-            Title = movie.Title,
-            Description = movie.Description,
-            Director = movie.Director,
-            DurationInMinutes = movie.DurationInMinutes,
-            Genres = movie.Genres,
-            ImageUrl = movie.ImageUrl,
-            VideoUrl = movie.VideoUrl,
-        };
-    }
-
-    public async Task DeleteMovieAsync(Guid id)
-    {
-        var movie = await uow.Repo<Movie>().GetByIdAsync(id);
+        movie = await GetMovieWithRelationsAsync(id);
         if (movie == null)
         {
             throw new BadRequestException("Movie not found");
         }
-        
+        return ToResponse(movie);
+    }
+
+    public async Task DeleteMovieAsync(Guid id)
+    {
+        var movie = await GetMovieWithRelationsAsync(id);
+        if (movie == null)
+        {
+            throw new BadRequestException("Movie not found");
+        }
+
         uow.Repo<Movie>().SoftDelete(movie);
         await uow.SaveChangesAsync();
     }

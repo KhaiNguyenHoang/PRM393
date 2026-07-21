@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:netmu/features/movies/models/movie.dart';
 import 'package:netmu/features/movies/services/movie_service.dart';

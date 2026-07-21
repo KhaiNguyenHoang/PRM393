@@ -1,4 +1,6 @@
-﻿namespace Netmu.Dtos;
+﻿using Netmu.Models;
+
+namespace Netmu.Dtos;
 
 public class RegisterDto
 {
@@ -37,4 +39,21 @@ public class UserProfileDto
     public Guid Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+}
+
+public class UserAdminDto
+{
+    public Guid Id { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public UserStatus Status { get; set; }
+}
+
+public class AnalyticsDto
+{
+    public int TotalUsers { get; set; }
+    public int TotalMovies { get; set; }
+    public int TotalViews { get; set; }
+    public int BannedCount { get; set; }
 }
