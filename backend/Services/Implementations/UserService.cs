@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Netmu.Dtos;
 using Netmu.Exceptions;
 using Netmu.Models;
@@ -59,7 +59,7 @@ public class UserService(
             Issuer = jwtSection["Issuer"] ?? "Netmu",
             Audience = jwtSection["Audience"] ?? "Netmu-Mobile",
             ExpiresInMinutes = int.Parse(jwtSection["ExpiresInMinutes"] ?? "60"),
-        }, jwtSection["Secret"]!);
+        }, jwtSection["Key"]!);
 
         return new LoginDtoResponse
         {
