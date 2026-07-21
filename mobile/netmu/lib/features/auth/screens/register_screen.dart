@@ -53,10 +53,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final username = _usernameController.text;
       final email = _emailController.text;
       final password = _passwordController.text;
-      var deviceToken = await FirebaseMessaging.instance.getToken();
-      if (deviceToken == null) {
-        NetmuLog.logger.e("Failed to get device token");
-        deviceToken = "";
+      String deviceToken = "";
+      try {
+        var token = await FirebaseMessaging.instance.getToken();
+        if (token != null) deviceToken = token;
+      } catch (e) {
+        NetmuLog.logger.e("Failed to get device token: $e");
       }
       final request = RegisterRequest(
         username: username,

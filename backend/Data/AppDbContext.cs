@@ -11,6 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<FavoriteMovie> FavoriteMovies { get; set; }
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<Playlist> Playlists { get; set; }
+    public DbSet<PlaylistMovie> PlaylistMovies { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<Director> Directors { get; set; }
     public DbSet<Actor> Actors { get; set; }
@@ -27,6 +29,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
         modelBuilder.Entity<Notification>().ToTable("notifications");
         modelBuilder.Entity<FavoriteMovie>().ToTable("favorite_movies");
         modelBuilder.Entity<Review>().ToTable("reviews");
+        modelBuilder.Entity<Playlist>().ToTable("playlists");
+        modelBuilder.Entity<PlaylistMovie>().ToTable("playlist_movies");
         modelBuilder.Entity<Genre>().ToTable("genres");
         modelBuilder.Entity<Director>().ToTable("directors");
         modelBuilder.Entity<Actor>().ToTable("actors");
@@ -92,6 +96,21 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             .HasForeignKey(x => x.UserId);
 
         modelBuilder.Entity<Review>()
+            .HasOne(x => x.Movie)
+            .WithMany()
+            .HasForeignKey(x => x.MovieId);
+
+        modelBuilder.Entity<Playlist>()
+            .HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
+
+        modelBuilder.Entity<PlaylistMovie>()
+            .HasOne(x => x.Playlist)
+            .WithMany(x => x.PlaylistMovies)
+            .HasForeignKey(x => x.PlaylistId);
+
+        modelBuilder.Entity<PlaylistMovie>()
             .HasOne(x => x.Movie)
             .WithMany()
             .HasForeignKey(x => x.MovieId);

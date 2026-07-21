@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Netmu.Dtos;
 using Netmu.Exceptions;
 using Netmu.Models;

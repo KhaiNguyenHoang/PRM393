@@ -7,6 +7,7 @@ import 'package:netmu/features/movies/widgets/movie_player.dart';
 import 'package:netmu/l10n/app_localizations.dart';
 import 'package:netmu/features/favorites/widgets/favorite_button.dart';
 import 'package:netmu/features/movies/widgets/review_section.dart';
+import 'package:netmu/features/playlists/widgets/add_to_playlist_button.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
@@ -215,7 +216,13 @@ class _MovieDetailState extends State<MovieDetail> {
                           color: ColorTheme.surface,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: FavoriteButton(movieId: movie.id),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            FavoriteButton(movieId: movie.id),
+                            AddToPlaylistButton(movieId: movie.id),
+                          ],
+                        ),
                       ),
                     ],
                   ),
