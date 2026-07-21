@@ -107,7 +107,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                               )
                             : const Icon(Icons.movie, color: ColorTheme.buttonPrimary, size: 40),
                         title: Text(movie.title, style: const TextStyle(color: ColorTheme.textPrimary, fontWeight: FontWeight.bold)),
-                        subtitle: Text(movie.director, style: const TextStyle(color: ColorTheme.textSecondary)),
+                        subtitle: Text(movie.directorNames, style: const TextStyle(color: ColorTheme.textSecondary)),
                         trailing: IconButton(
                           icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent, size: 20),
                           onPressed: () => _removeMovie(movie),
