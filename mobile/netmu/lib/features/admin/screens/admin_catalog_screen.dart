@@ -172,7 +172,7 @@ class _GenreTabState extends State<_GenreTab> {
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 80),
                 itemCount: _items.length,
-                separatorBuilder: (_, __) => const Divider(height: 1, color: ColorTheme.border),
+                separatorBuilder: (_, _) => const Divider(height: 1, color: ColorTheme.border),
                 itemBuilder: (_, i) => ListTile(
                   title: Text(_items[i].name, style: const TextStyle(color: ColorTheme.textPrimary)),
                   trailing: Row(
@@ -311,7 +311,7 @@ class _DirectorTabState extends State<_DirectorTab> {
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 80),
                 itemCount: _items.length,
-                separatorBuilder: (_, __) => const Divider(height: 1, color: ColorTheme.border),
+                separatorBuilder: (_, _) => const Divider(height: 1, color: ColorTheme.border),
                 itemBuilder: (_, i) => ListTile(
                   title: Text(_items[i].name, style: const TextStyle(color: ColorTheme.textPrimary)),
                   subtitle: Text(_items[i].bio, style: const TextStyle(color: ColorTheme.textSecondary, fontSize: 12), maxLines: 1),
@@ -451,7 +451,7 @@ class _ActorTabState extends State<_ActorTab> {
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 12, 20, 80),
                 itemCount: _items.length,
-                separatorBuilder: (_, __) => const Divider(height: 1, color: ColorTheme.border),
+                separatorBuilder: (_, _) => const Divider(height: 1, color: ColorTheme.border),
                 itemBuilder: (_, i) => ListTile(
                   title: Text(_items[i].name, style: const TextStyle(color: ColorTheme.textPrimary)),
                   subtitle: Text(_items[i].bio, style: const TextStyle(color: ColorTheme.textSecondary, fontSize: 12), maxLines: 1),

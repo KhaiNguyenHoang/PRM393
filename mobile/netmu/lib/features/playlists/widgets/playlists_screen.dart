@@ -133,10 +133,11 @@ class _PlaylistsScreenState extends State<PlaylistsScreen> {
                   itemCount: _playlists.length,
                   itemBuilder: (context, index) {
                     final p = _playlists[index];
-                    return Container(
+                    return Card(
                       margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: ColorTheme.surface,
+                      color: ColorTheme.surface,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: ListTile(
